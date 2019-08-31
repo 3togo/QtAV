@@ -88,3 +88,6 @@ python/QtAVWidgets
 
 #cache
 *.swp
+
+*build_*/
+
