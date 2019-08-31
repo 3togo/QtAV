@@ -91,3 +91,4 @@ python/QtAVWidgets
 
 *build*/
 out/
+debian/*
