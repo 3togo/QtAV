@@ -6,7 +6,8 @@ ARCH=${BNAME##*_}
 QtAV=$PWD
 QTARM="/opt/qt5/$ARCH/4.9/"
 QMAKE="$QTARM/bin/qmake"
-MAKE="$HOME/android-ndk-r18b/prebuilt/linux-x86_64/bin/make"
+#MAKE="$HOME/android-ndk-r18b/prebuilt/linux-x86_64/bin/make"
+MAKE=make
 ROOTDIR=$QtAV
 
 #disable VideoDecoderMediaCodec 
@@ -27,7 +28,14 @@ $MAKE -f $BUILDDIR/Makefile qmake_all
 $MAKE -j `nproc`
 
 #fix lib link
-ln -sf $BUILDDIR/lib_android_arm_llvm $BUILDDIR/$QPSUBDIR/out/lib_android__llvm
+dirs=("$BUILDDIR/$QPSUBDIR" "$ROOTDIR/$QPSUBDIR")
+for mdir in ${dirs[@]}; do
+    mdir="$mdir/out"
+    [[ ! -d $mdir ]] && mkdir -p $mdir
+    cmd="ln -sf $BUILDDIR/lib_android_arm_llvm $mdir/lib_android__llvm"
+    echo $cmd
+    $cmd
+done
 
 
 BUILDDIR2=$BUILDDIR/$QPSUBDIR/build_armv7
@@ -54,7 +62,8 @@ sed -i "s/gradle\:.*/gradle\:2\.3\.3'/g" $BUILDDIR2/android-build/build.gradle
 sed -i 's/gradle[^/]*zip/gradle\-3\.3\-all\.zip/g'  $BUILDDIR2/android-build/gradle/wrapper/gradle-wrapper.properties
 cd $BUILDDIR2/android-build
 ./gradlew assembleDebug
-find . |grep -i apk
+cd $ROOTDIR
+find . |grep -i "\.apk"
 
 
 
