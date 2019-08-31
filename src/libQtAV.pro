@@ -122,7 +122,7 @@ android {
   qtHaveModule(androidextras) { #qt5.2 has QAndroidJniObject
     QT *= androidextras #QPlatformNativeInterface get "QtActivity"
     SOURCES *= io/AndroidIO.cpp
-    SOURCES *= codec/video/VideoDecoderMediaCodec.cpp
+#    SOURCES *= codec/video/VideoDecoderMediaCodec.cpp
     exists($$[QT_INSTALL_HEADERS]/MediaCodecTextureStandalone.h) {
       DEFINES *= MEDIACODEC_TEXTURE
       LIBS *= -lqtav-mediacodec

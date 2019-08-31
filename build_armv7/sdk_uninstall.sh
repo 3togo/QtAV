@@ -1,0 +1,13 @@
+rm -f /opt/qt5/armv7/4.9/lib/*Qt*AV*
+rm -f /opt/qt5/armv7/4.9/lib/libQt5AV.so
+rm -rf /opt/qt5/armv7/4.9/include/QtAV
+rm -f /opt/qt5/armv7/4.9/mkspecs/features/av.prf
+rm -f /opt/qt5/armv7/4.9/mkspecs/modules/qt_lib_av*.pri
+rm -f /opt/qt5/armv7/4.9/lib/libcommon.so
+rm -f /opt/qt5/armv7/4.9/lib/*Qt*AV*
+rm -f /opt/qt5/armv7/4.9/lib/libQt5AVWidgets.so
+rm -rf /opt/qt5/armv7/4.9/include/QtAVWidgets
+rm -f /opt/qt5/armv7/4.9/mkspecs/features/avwidgets.prf
+rm -f /opt/qt5/armv7/4.9/mkspecs/modules/qt_lib_avwidgets*.pri
+rm -f /opt/qt5/armv7/4.9/lib/libcommon.so
+rm -rf /opt/qt5/armv7/4.9/qml/QtAV
