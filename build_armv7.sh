@@ -47,10 +47,14 @@ $MAKE -j `nproc`
 
 $MAKE INSTALL_ROOT=$OUTDIR install
 $QMAKE -install qinstall -exe $EXE_IN $EXE_OUT
-sed -i 's/gradle\:.*/gradle\:2\.2\.0/g' $BUILDDIR2/android-build/build.gradle
 
 echo "---------- running androiddeployqt now ------------"
 "$QTARM/bin/androiddeployqt" --input $JSON --output $OUTDIR --android-platform android-29 --jdk /usr/lib/jvm/java-8-openjdk-amd64 --gradle
+sed -i "s/gradle\:.*/gradle\:2\.3\.3'/g" $BUILDDIR2/android-build/build.gradle
+sed -i 's/gradle[^/]*zip/gradle\-3\.3\-all\.zip/g'  $BUILDDIR2/android-build/gradle/wrapper/gradle-wrapper.properties
+cd $BUILDDIR2/android-build
+./gradlew assembleDebug
+find . |grep -i apk
 
 
 
