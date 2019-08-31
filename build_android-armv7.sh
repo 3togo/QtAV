@@ -7,6 +7,21 @@ QtAV=$PWD
 QTARM=`find -L "/opt/qt5" -maxdepth 2 -type d -name "$ARCH"`
 QTARM=${QTARM##*[[:space:]]}
 QMAKE="$QTARM/bin/qmake"
+
+if [[ -z "$QTARM" ]]; then
+	echo "QT for $ARCH is not installed"
+	echo "pls install it into /opt/qt5/$ARCH"
+	echo "according to https://wiki.qt.io/Android"
+	echo "so that /opt/qt5/$ARCH/bin/qmake could be found"
+	exit
+fi
+
+
+if [[ ! -e "$QMAKE" ]]; then
+	echo "$QMAKE does not exist!"
+	exit
+fi
+
 #MAKE="$HOME/android-ndk-r18b/prebuilt/linux-x86_64/bin/make"
 MAKE=make
 ROOTDIR=$QtAV
