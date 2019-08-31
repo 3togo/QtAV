@@ -12,6 +12,7 @@ if [[ -z "$QTARM" ]]; then
 	echo "QT for $ARCH is not installed"
 	echo "pls install it into /opt/qt5/$ARCH"
 	echo "according to https://wiki.qt.io/Android"
+	echo "and remember to add prefix to configure --prefix=/opt/qt5/$ARCH"
 	echo "so that /opt/qt5/$ARCH/bin/qmake could be found"
 	exit
 fi
