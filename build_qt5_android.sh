@@ -13,6 +13,15 @@ toolsFolder=$wkdir/android-sdk-tools
 ndkFile=android-ndk-$ndkVersion-linux-x86_64.zip
 ndkFolder=$wkdir/android-ndk-$ndkVersion
 
+for pkg in openjdk-8-jdk libc6-i386 build-essential android-sdk android-sdk-platform-23; do
+    if ! dpkg -s $pkg >/dev/null 2>&1; then
+        echo "installing $pkg"
+        sudo apt-get -y install $pkg
+    else
+        echo "$pkg was installed"
+    fi
+done
+
 
 qt5_prebuild() {
     [[ ! -d $wkdir ]] && mkdir $wkdir
@@ -84,8 +93,6 @@ qt5_build() {
     fi
     cd $GIT/qt5
     git pull
-    exit
-    sudo apt-get install openjdk-8-jdk  libc6-i386 build-essential android-sdk android-sdk-platform-23 -y
     perl init-repository
     export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
     export PATH=$PATH:$JAVA_HOME/bin
