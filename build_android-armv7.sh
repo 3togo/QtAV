@@ -6,19 +6,20 @@ ARCH=${BNAME##*_}
 ARCH_SHORT=${ARCH##*-}
 QtAV=$PWD
 FFMPEG=$QtAV/ffmpeg-android
-QTARM=`find -L "/opt/qt5" -maxdepth 2 -type d -name "$ARCH"`
-QTARM=${QTARM##*[[:space:]]}
+#QTARM=`find -L "/opt/qt5" -maxdepth 2 -type d -name "$ARCH"`
+#QTARM=${QTARM##*[[:space:]]}
+QTARM="$HOME/android/qt5/$ARCH_SHORT"
 QMAKE="$QTARM/bin/qmake"
 
 
 fix_qt5_arm_ffmpeg() {
 
-    if [[ -z "$QTARM" ]]; then
+    if [[ ! -d "$QTARM" ]]; then
         echo "QT for $ARCH is not installed"
-        echo "pls install it into /opt/qt5/$ARCH"
+        echo "pls install it into $QTARM"
         echo "according to https://wiki.qt.io/Android"
-        echo "and remember to add prefix to configure --prefix=/opt/qt5/$ARCH"
-        echo "so that /opt/qt5/$ARCH/bin/qmake could be found"
+        echo "and remember to add prefix to configure --prefix=$QTARM"
+        echo "so that $QTARM/bin/qmake could be found"
         exit
     fi
 
@@ -33,8 +34,12 @@ fix_qt5_arm_ffmpeg() {
     dst="$QTARM/lib"
     echo $src
     echo $dst
-
-    for mfile in $src/*.so; do
+	mfiles=$src/*.so
+	if [ -z "$mfiles" ]; then
+		echo "$src does not contain any *.so"
+		exit
+	fi
+    for mfile in $mfiles; do
         echo $mfile
         dst_file="$dst/${mfile##*/}"
         if [ ! -f $dst_file ]; then
