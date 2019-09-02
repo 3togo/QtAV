@@ -9,9 +9,9 @@ toolsVersion="r26.1.1"
 arch="armv7"
 repository=https://dl.google.com/android/repository
 toolsFile=sdk-tools-linux-4333796.zip
-toolsFolder=$wkdir/android-sdk-tools
+toolsFolder=android-sdk-tools
 ndkFile=android-ndk-$ndkVersion-linux-x86_64.zip
-ndkFolder=$wkdir/android-ndk-$ndkVersion
+ndkFolder=android-ndk-$ndkVersion
 
 for pkg in openjdk-8-jdk libc6-i386 build-essential android-sdk android-sdk-platform-23; do
     if ! dpkg -s $pkg >/dev/null 2>&1; then
