@@ -5,7 +5,7 @@ ndkVersion="r18b"
 sdkBuildToolsVersion="28.0.3"
 sdkApiLevel="android-28"
 toolsVersion="r26.1.1"
-
+arch="armv7"
 repository=https://dl.google.com/android/repository
 toolsFile=sdk-tools-linux-4333796.zip
 toolsFolder=$wkdir/android-sdk-tools
@@ -14,7 +14,7 @@ ndkFolder=$wkdir/android-ndk-$ndkVersion
 
 
 qt5_prebuild() {
-    [[ ! -d $wkdir ]] && mkdir wkdir
+    [[ ! -d $wkdir ]] && mkdir $wkdir
     [[ ! -f $cfg ]] && touch $cfg
     #rm -rf $toolsFolder
     #rm -rf $ndkFolder
@@ -26,14 +26,14 @@ qt5_prebuild() {
     fi
     "unzip ndk"
     unzip -o $toolsFile -d $toolsFolder
-
+	ln -sf $toolsFolder sdk
     if [ ! -f $ndkFile ]; then
         echo "Downloading NDK from $repository"
         wget -q $repository/$ndkFile
     fi
     "unzip ndk"
     unzip -o $ndkFile -d $wkdir
-
+	ln -sf $ndkFile ndk
     #rm $toolsFile
     #rm $ndkFile
 
@@ -74,7 +74,6 @@ qt5_prebuild() {
 qt5_build() {
     [[ ! -d ~/git ]] && mkdir ~/git
     if [ ! -d ~/git/qt5 ]; then
-        mkdir -p ~/git/qt5
         git clone git://code.qt.io/qt/qt5.git qt5
     fi
     cd ~/git/qt5
@@ -83,10 +82,12 @@ qt5_build() {
     perl init-repository
     export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
     export PATH=$PATH:$JAVA_HOME/bin
-    CONFIGURE="./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk $ndkFolder -android-sdk $toolsFolder -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=/opt/qt5/android-armv7"
+    #CONFIGURE="./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk $ndkFolder -android-sdk $toolsFolder -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$wkdir/qt5/armv7"
+    CONFIGURE="./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk $wkdir/ndk -android-sdk $wkdir/sdk -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$wkdir/qt5/$arch"
     $CONFIGURE
-    make -j `nproc`
-    sudo make install
+    echo $CONFIGURE
+    #make -j `nproc`
+    #make install
 }
 
 
