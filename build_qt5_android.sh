@@ -43,7 +43,7 @@ qt5_prebuild() {
     fi
     echo "unzip ndk"
     unzip -o $ndkFile -d $wkdir
-    ln -sf $ndkFile ndk
+    ln -sf ${ndkFile%%.*} ndk
     #rm $toolsFile
     #rm $ndkFile
 
@@ -96,6 +96,7 @@ qt5_build() {
     perl init-repository
     export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
     export PATH=$PATH:$JAVA_HOME/bin
+    export
     #CONFIGURE="./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk $ndkFolder -android-sdk $toolsFolder -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$wkdir/qt5/armv7"
     CONFIGURE="./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk $wkdir/ndk -android-sdk $wkdir/sdk -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$wkdir/qt5/$arch"
     $CONFIGURE
