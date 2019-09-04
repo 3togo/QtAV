@@ -1,6 +1,9 @@
 #!/bin/bash
 GIT=$HOME/git
 wkdir=$HOME/android
+
+bdir=/opt/jbuild
+[[ ! -d $bdir ]] && mkdir -p $bdir
 cfg=$HOME/.android/repositories.cfg
 ndkVersion="r18b"
 sdkBuildToolsVersion="28.0.3"
@@ -97,7 +100,7 @@ qt5_build() {
     export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
     export PATH=$PATH:$JAVA_HOME/bin
     export
-    #CONFIGURE="./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk $ndkFolder -android-sdk $toolsFolder -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$wkdir/qt5/armv7"
+    #CONFIGURE="./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk $ndkFolder -android-sdk $toolsFolder -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$bdir/qt5/armv7"
     CONFIGURE="./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk $wkdir/ndk -android-sdk $wkdir/sdk -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$wkdir/qt5/$arch"
     $CONFIGURE
     echo $CONFIGURE
@@ -105,8 +108,9 @@ qt5_build() {
     make install
 }
 
-
-qt5_prebuild
+if [[ ! -d $wkdir ]]; then
+    qt5_prebuild
+fi
 qt5_build
 #wget https://liquidtelecom.dl.sourceforge.net/project/avbuild/android/ffmpeg-4.2-android-clang.tar.xz
 
