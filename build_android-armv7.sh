@@ -36,6 +36,8 @@ export CPATH=$FFMPEG/include:$CPATH
 export LIBRARY_PATH=$FFMPEG/lib/armv7:$LIBRARY_PATH
 export LD_LIBRARY_PATH=$FFMPEG/lib/armv7:$LD_LIBRARY_PATH
 
+job_1() {
+
 cmd="$QMAKE $QTAV/QtAV.pro -spec android-clang CONFIG+=debug CONFIG+=qml_debug -config recheck"
 #cmd="$QMAKE $PWD/QtAV.pro CONFIG+=debug CONFIG+=qml_debug -config recheck"
 $cmd
@@ -55,12 +57,7 @@ for mdir in ${dirs[@]}; do
     $cmd
 done
 
-
-CAN_I_RUN_SUDO=$(sudo -n uptime 2>&1|grep "load"|wc -l)
-if [ ${CAN_I_RUN_SUDO} -gt 0 ]
-then
-    echo "I can run the sudo command"
-    sdk_install="$BUILDDIR/sdk_install.sh"
+   sdk_install="$BUILDDIR/sdk_install.sh"
     if [ ! -f $sdk_install ]; then
         echo "$sdk_install does not exist"
         exit
@@ -69,12 +66,17 @@ then
     $cmd
     echo "$cmd"
     echo "done adding libQtAV libraries to qtarm"
+
+}
+
+#CAN_I_RUN_SUDO=$(sudo -n uptime 2>&1|grep "load"|wc -l)
+CAN_I_RUN_SUDO=$(sudo -n -v 2>&1|grep "Sorry"|wc -l)
+if [ ${CAN_I_RUN_SUDO} -eq 0 ]; then
+    echo "I can run the sudo command(${CAN_I_RUN_SUDO}"
+    job_1
 else
-    echo "I can't run the Sudo command"
+    echo "I can't run the Sudo command${CAN_I_RUN_SUDO}"
 fi
-
-
-
 
 
 BUILDDIR2=$BUILDDIR/$QPSUBDIR/$BNAME
@@ -88,9 +90,10 @@ EXE_OUT2=$BUILDDIR/$QPSUBDIR/out/bin/libQMLPlayer.so
 JSON=android-libQMLPlayer.so-deployment-settings.json
 cp $EXE_IN $EXE_OUT2
 cd $BUILDDIR2
-cmd="$QMAKE $PRO -spec android-clang CONFIG+=debug CONFIG+=qml_debug"
+cmd="$QMAKE -d $PRO -spec android-clang CONFIG+=debug CONFIG+=qml_debug"
 echo "--------------$cmd---------------"
 $cmd
+
 echo $MAKEFILE
 $MAKE -f $MAKEFILE qmake_all
 $MAKE -j `nproc`
