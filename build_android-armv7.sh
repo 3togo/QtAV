@@ -55,15 +55,28 @@ for mdir in ${dirs[@]}; do
     $cmd
 done
 
-sdk_install="$BUILDDIR/sdk_install.sh"
-if [ ! -f $sdk_install ]; then
-    echo "$sdk_install does not exist"
-    exit
+
+CAN_I_RUN_SUDO=$(sudo -n uptime 2>&1|grep "load"|wc -l)
+if [ ${CAN_I_RUN_SUDO} -gt 0 ]
+then
+    echo "I can run the sudo command"
+    sdk_install="$BUILDDIR/sdk_install.sh"
+    if [ ! -f $sdk_install ]; then
+        echo "$sdk_install does not exist"
+        exit
+    fi
+    cmd="sudo bash $sdk_install"
+    $cmd
+    echo "$cmd"
+    echo "done adding libQtAV libraries to qtarm"
+else
+    echo "I can't run the Sudo command"
 fi
-cmd="sudo bash $sdk_install"
-$cmd
-echo "$cmd"
-echo "done adding libQtAV libraries to qtarm"
+
+
+
+
+
 BUILDDIR2=$BUILDDIR/$QPSUBDIR/$BNAME
 [[ ! -d $BUILDDIR2 ]] && mkdir $BUILDDIR2
 OUTDIR=$BUILDDIR2/android-build
