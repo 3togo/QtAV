@@ -36,7 +36,7 @@ TestResults
 Makefile*
 *.*pro*.user*
 *.[oa]
-*.so*
+#*.so*
 *.dll
 *.lib
 *.exp
