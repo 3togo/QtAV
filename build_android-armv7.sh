@@ -5,7 +5,7 @@ BNAME=${BNAME%%.*}
 ARCH=${BNAME##*_}
 ARCH_SHORT=${ARCH##*-}
 QTAV=$PWD
-FFMPGE=$PWD/ffmpeg-android
+FFMPEG=$PWD/ffmpeg-android
 bdir="/opt/jbuild"
 BARM=$bdir/qt5/$ARCH_SHORT
 QMAKE=$BARM/bin/qmake
@@ -27,7 +27,6 @@ BUILDDIR=$PWD/$BNAME
 cd $BUILDDIR
 QPSUBDIR=examples/QMLPlayer
 SRCDIR=$QTAV/$QPSUBDIR
-#PRO=$ROOTDIR/QtAV.pro
 PRO=$SRCDIR/QMLPlayer.pro
 echo "PRO=$PRO"
 
@@ -35,14 +34,15 @@ echo "PRO=$PRO"
 export CPATH=$FFMPEG/include:$CPATH
 export LIBRARY_PATH=$FFMPEG/lib/armv7:$LIBRARY_PATH
 export LD_LIBRARY_PATH=$FFMPEG/lib/armv7:$LD_LIBRARY_PATH
-
+echo "CPATH=$CPATH"
 job_1() {
 
 cmd="$QMAKE $QTAV/QtAV.pro -spec android-clang CONFIG+=debug CONFIG+=qml_debug -config recheck"
 #cmd="$QMAKE $PWD/QtAV.pro CONFIG+=debug CONFIG+=qml_debug -config recheck"
 $cmd
 echo $cmd
-echo $LD_LIBRARY_PATH
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+echo "CPATH=$CPATH"
 
 $MAKE -f $BUILDDIR/Makefile qmake_all
 $MAKE -j `nproc`
@@ -103,16 +103,12 @@ $QMAKE -install qinstall -exe $EXE_IN $EXE_OUT
 
 echo "---------- running androiddeployqt now ------------"
 "$BARM/bin/androiddeployqt" --input $JSON --output $OUTDIR --android-platform android-29 --jdk /usr/lib/jvm/java-8-openjdk-amd64 --gradle
-#fix_gradle $BUILDDIR2/android-build/build.gradle $BUILDDIR2/android-build/gradle/wrapper/gradle-wrapper.properties
 
 cd $BUILDDIR2/android-build
 ./gradlew assembleDebug
-#fix_gradle $BUILDDIR2/android-build/build.gradle $BUILDDIR2/android-build/gradle/wrapper/gradle-wrapper.properties
 
-#cd $BUILDDIR2/android-build
-#./gradlew assembleDebug
 cd $BUILDDIR
-find . -type f|grep -i "\.apk"
+find . -type f -print|grep -i "\.apk"|xargs adb install
 
 
 

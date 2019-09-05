@@ -1,8 +1,0 @@
-DEBUG 1: /opt/jbuild/qt5/armv7/mkspecs/features/configure_base.prf:59:
-lg := "> /opt/jbuild/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ -c -D__ANDROID_API__=16 -
-target armv7-none-linux-androideabi -gcc-toolchain /opt/jbuild/ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64
--fno-limit-debug-info -DANDROID_HAS_WSTRING --sysroot=/opt/jbuild/ndk/sysroot -isystem /opt/jbuild/ndk/sysroot/usr/include/arm-linux-androideabi
--isystem /opt/jbuild/ndk/sources/cxx-stl/llvm-libc++/include -isystem /opt/jbuild/ndk/sources/android/support/include
--isystem /opt/jbuild/ndk/sources/cxx-stl/llvm-libc++abi/include -fstack-protector-strong -DANDROID -march=armv7-a -mfloat-abi=softfp -mfpu=vfp
--fno-builtin-memmove -mthumb -Oz -std=gnu++11 -Wall -W -fPIC -D__STDC_CONSTANT_MACROS -I. -I/opt/jbuild/qt5/armv7/include
- -I../../contrib/dxsdk -I/opt/jbuild/qt5/armv7/mkspecs/android-clang -o main.o main.cpp" "> main.cpp:21:10: fatal error: \'libavutil/avutil.h\' file not found"
