@@ -4,15 +4,15 @@ BNAME=${BNAME##*/}
 BNAME=${BNAME%%.*}
 ARCH=${BNAME##*_}
 ARCH_SHORT=${ARCH##*-}
-QTAV=$PWD
+QTAV=$HOME/android/QtAV
 FFMPEG=$PWD/ffmpeg-android
 #bdir="/opt/jbuild"
 bdir="$HOME/.local"
 BARM=$bdir/qt5/$ARCH_SHORT
 QMAKE=$BARM/bin/qmake
-[[ ! -d $bdir ]] && sudo mkdir -p $bdir
-[[ ! -d $bdir/ndk ]] &&  sudo ln -sf $PWD/../ndk $bdir/ndk
-[[ ! -d $bdir/sdk ]] &&  sudo ln -sf $PWD/../sdk $bdir/sdk
+#[[ ! -d $bdir ]] && sudo mkdir -p $bdir
+#[[ ! -d $bdir/ndk ]] &&  sudo ln -sf $PWD/../ndk $bdir/ndk
+#[[ ! -d $bdir/sdk ]] &&  sudo ln -sf $PWD/../sdk $bdir/sdk
 #[[ ! -d $bdir/qt5 ]] &&  sudo ln -sf $PWD/../qt5 $bdir/qt5
 export ANDROID_NDK_ROOT="$HOME/android/ndk"
 export ANDROID_SDK_ROOT="$HOME/android/sdk"
@@ -65,7 +65,7 @@ done
         echo "$sdk_install does not exist"
         exit
     fi
-    cmd="sudo bash $sdk_install"
+    cmd="bash $sdk_install"
     $cmd
     echo "$cmd"
     echo "done adding libQtAV libraries to qtarm"
@@ -73,15 +73,15 @@ done
 }
 
 #CAN_I_RUN_SUDO=$(sudo -n uptime 2>&1|grep "load"|wc -l)
-CAN_I_RUN_SUDO=$(sudo -n -v 2>&1|grep "Sorry"|wc -l)
-if [ ${CAN_I_RUN_SUDO} -eq 0 ]; then
-    echo "I can run the sudo command(${CAN_I_RUN_SUDO}"
-    job_1
-else
-    echo "I can't run the Sudo command${CAN_I_RUN_SUDO}"
-fi
+#CAN_I_RUN_SUDO=$(sudo -n -v 2>&1|grep "Sorry"|wc -l)
+#if [ ${CAN_I_RUN_SUDO} -eq 0 ]; then
+#    echo "I can run the sudo command(${CAN_I_RUN_SUDO}"
+#    job_1
+#else
+#    echo "I can't run the Sudo command${CAN_I_RUN_SUDO}"
+#fi
 
-
+job_1
 BUILDDIR2=$BUILDDIR/$QPSUBDIR/$BNAME
 [[ ! -d $BUILDDIR2 ]] && mkdir $BUILDDIR2
 OUTDIR=$BUILDDIR2/android-build

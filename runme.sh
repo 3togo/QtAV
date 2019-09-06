@@ -26,3 +26,9 @@ else
 fi
 [[ "$INSTALL_QT5" == "y" ]] && $QTAV/build_qt5_android.sh
 $QTAV/housekeeping.sh
+find $QTAV -name Makefile -print0|xargs -0 rm
+rm -rf $QTAV/build_android-armv7
+echo "press enter to start building QMLPlayer"
+read answer
+cd $QTAV
+$QTAV/build_android-armv7.sh
