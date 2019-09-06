@@ -6,17 +6,20 @@ ARCH=${BNAME##*_}
 ARCH_SHORT=${ARCH##*-}
 QTAV=$PWD
 FFMPEG=$PWD/ffmpeg-android
-bdir="/opt/jbuild"
+#bdir="/opt/jbuild"
+bdir="$HOME/.local"
 BARM=$bdir/qt5/$ARCH_SHORT
 QMAKE=$BARM/bin/qmake
 [[ ! -d $bdir ]] && sudo mkdir -p $bdir
 [[ ! -d $bdir/ndk ]] &&  sudo ln -sf $PWD/../ndk $bdir/ndk
 [[ ! -d $bdir/sdk ]] &&  sudo ln -sf $PWD/../sdk $bdir/sdk
-[[ ! -d $bdir/qt5 ]] &&  sudo ln -sf $PWD/../qt5 $bdir/qt5
-export ANDROID_NDK_ROOT="$bdir/ndk"
-export ANDROID_SDK_ROOT="$bdir/sdk"
+#[[ ! -d $bdir/qt5 ]] &&  sudo ln -sf $PWD/../qt5 $bdir/qt5
+export ANDROID_NDK_ROOT="$HOME/android/ndk"
+export ANDROID_SDK_ROOT="$HOME/android/sdk"
 echo "QMAKE = $QMAKE"
-
+echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
+echo "ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT"
+###exit
 
 echo "-------------------done fixing gradle---------------------"
 

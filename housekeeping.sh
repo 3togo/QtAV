@@ -28,7 +28,7 @@ fix_gradle() {
 fix_qt5_arm_ffmpeg() {
     QTARM="$1"
     if [[ -z "$QTARM" ]]; then
-        QTARM="../qt5/$ARCH"
+        QTARM="$HOME/.local/qt5/$ARCH"
     fi
     if [[ ! -d "$QTARM" ]]; then
         echo "QT for $ARCH is not installed"
@@ -45,27 +45,31 @@ fix_qt5_arm_ffmpeg() {
         exit
     fi
 
-    src="ffmpeg-android/lib/$ARCH"
-    dst="$QTARM/lib"
+    src="$QTAV/ffmpeg-android/lib/$ARCH"
+    #dst="$QTARM/lib"
+    dst=$HOME/.local/qt5/$ARCH/lib
     echo $src
     echo $dst
 
     for mfile in $src/*.so; do
         dst_file="$dst/${mfile##*/}"
-        if [ ! -f $dst_file ]; then
+        echo "dst_file=$dst_file"
+        if [ ! -f "$dst_file" ]; then
             echo "$dst_file is not found"
             cmd="cp $mfile $dst"
             $cmd
             echo $cmd
         else
-            echo "$mfile does not exist"
+            echo "$dst_file is already existed"
         fi
     done
 }
 
 
 ARCH="armv7"
-QTARM="../qt5"
+QTARM="$HOME/.local/qt5"
+QTAV=$HOME/android/QtAV
+QMLPLAYER=$QTAV/examples/QMLPlayer
 #fix_gradle $QTARM/src/android/templates/build.gradle $QTARM/src/3rdparty/gradle/gradle/wrapper/gradle-wrapper.properties sudo
-fix_gradle examples/QMLPlayer/android/build.gradle examples/QMLPlayer/android/gradle/wrapper/gradle-wrapper.properties
+fix_gradle $QMLPLAYER/android/build.gradle $QMLPLAYER/android/gradle/wrapper/gradle-wrapper.properties
 fix_qt5_arm_ffmpeg

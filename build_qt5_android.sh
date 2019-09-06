@@ -1,118 +1,46 @@
-#!/bin/bash
-GIT=$HOME/git
-wkdir=$HOME/android
 
-bdir=/opt/jbuild
-[[ ! -d $bdir ]] && mkdir -p $bdir
-cfg=$HOME/.android/repositories.cfg
-ndkVersion="r18b"
-sdkBuildToolsVersion="28.0.3"
-sdkApiLevel="android-28"
-toolsVersion="r26.1.1"
-arch="armv7"
-repository=https://dl.google.com/android/repository
-toolsFile=sdk-tools-linux-4333796.zip
-toolsFolder=android-sdk-tools
-ndkFile=android-ndk-$ndkVersion-linux-x86_64.zip
-ndkFolder=android-ndk-$ndkVersion
+reinstall_ndk_sdk() {
+    for mzip in $NDK_ZIP $SDK_ZIP; do
+        if [ -z "$mzip" ]; then
+            echo "$mzip was not found"
+            exit
+        fi
+    done
+    unzip $NDK_ZIP -d $PKGS
+    unzip $SDK_ZIP -d $PKGS/android-sdk-tools
 
-for pkg in openjdk-8-jdk libc6-i386 build-essential android-sdk android-sdk-platform-23; do
-    if ! dpkg -s $pkg >/dev/null 2>&1; then
-        echo "installing $pkg"
-        sudo apt-get -y install $pkg
-    else
-        echo "$pkg was installed"
-    fi
-done
-
-
-qt5_prebuild() {
-    [[ ! -d $wkdir ]] && mkdir $wkdir
-    [[ ! -f $cfg ]] && touch $cfg
-    #rm -rf $toolsFolder
-    #rm -rf $ndkFolder
-    cd $wkdir
-    if [ ! -f $toolsFile ]; then
-        echo "Downloading SDK tools from $repository"
-        wget -q $repository/$toolsFile
-
-    fi
-    echo "unzip sdk"
-    unzip -o $toolsFile -d $toolsFolder
-    ln -sf $toolsFolder sdk
-    if [ ! -f $ndkFile ]; then
-        echo "Downloading NDK from $repository"
-        wget -q $repository/$ndkFile
-    fi
-    echo "unzip ndk"
-    unzip -o $ndkFile -d $wkdir
-    ln -sf ${ndkFile%%.*} ndk
-    #rm $toolsFile
-    #rm $ndkFile
-
-    echo "Configuring environment"
-    export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-    export PATH=$PATH:$JAVA_HOME/bin
-
-    # Optional workaround for issue with certain JDK/JRE versions
-    #cp $toolsFolder/tools/bin/sdkmanager $toolsFolder/tools/bin/sdkmanager.backup
-    #sed -i 's/^DEFAULT_JVM_OPTS.*/DEFAULT_JVM_OPTS='"'\"-Dcom.android.sdklib.toolsdir=\$APP_HOME\" -XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'"'/' \
-    #        $toolsFolder/tools/bin/sdkmanager
-
-    echo "Installing SDK packages"
-    cd $toolsFolder/tools/bin
-    cmd="./sdkmanager platforms;$sdkApiLevel platform-tools build-tools;$sdkBuildToolsVersion"
-    echo $cmd
-    echo "y" |  $cmd
-    cmd="./sdkmanager --install emulator"
-    echo $cmd
-    img="system-images;android-21;google_apis;x86"
-    echo "y" |  $cmd
-    cmd="./sdkmanager --install '$img'"
-    echo $cmd
-    echo "----------------------------"
-    echo "y" |  eval "$cmd"
-
-    cmd="./avdmanager create avd -n x86emulator -k '$img' -c 2048M -f"
-    echo $cmd
-    echo 'no'  | eval "$cmd"
-    #cmd="./avdmanager create avd -n x86emulator -k 'system-images;android-21;google_apis;x86' -c 2048M -f"
-    #$cmd
-    #echo "no" | $cmd
-    #echo $cmd
-
-    #echo "Provisioniong complete. Here's the list of packages and avd devices:"
-    #./sdkmanager --list
-    #./avdmanager list avd
-}
-qt5_build() {
-    #reset bash
-    echo "start build qt5"
-    #bash
-    [[ ! -d $GIT ]] && mkdir $GIT
-    if [ ! -d $GIT/qt5 ]; then
-        cd $GIT
-        git clone git://code.qt.io/qt/qt5.git qt5
-    fi
-    cd $GIT/qt5
-    git pull
-    perl init-repository
-    export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-    export PATH=$PATH:$JAVA_HOME/bin
-    export
-    #CONFIGURE="./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk $ndkFolder -android-sdk $toolsFolder -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$bdir/qt5/armv7"
-    CONFIGURE="./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk $wkdir/ndk -android-sdk $wkdir/sdk -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$wkdir/qt5/$arch"
-    $CONFIGURE
-    echo $CONFIGURE
-    make -j `nproc`
-    make install
+    QT5=$PKGS/qt5
 }
 
-if [[ ! -d $wkdir ]]; then
-    qt5_prebuild
-fi
-qt5_build
-#wget https://liquidtelecom.dl.sourceforge.net/project/avbuild/android/ffmpeg-4.2-android-clang.tar.xz
+build_qt5() {
+    if [ ! -f $QT5_ZIP]; then
+        echo "$QT5_ZIP cannot be found"
+        exit
+    fi
+    tar zxvf $QT5_ZIP -C $PKGS
 
+    if [ ! -d $QT5 ]; then
+        echo "$QT5 directory cannot be found"
+    fi
+    cd $QT5
+    export ANDROID_NDK_ROOT=$HOME/android/ndk
+    export ANDROID_SDK_ROOT=$HOME/android/sdk
+    ./configure -xplatform android-clang -nomake tests -nomake examples -android-ndk $HOME/android/ndk -android-sdk $HOME/android/sdk -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$PREFIX
+    echo -n "OK to do 'make' ?"
+    read answer
+    if [ "$answer" != "${answer#[Yy]}" ] ; then
+        make -j `nproc`
+        make install
+    fi
+}
 
+PREFIX=$HOME/.local/qt5/armv7
+PKGS=$HOME/android/pkgs
+QT5_ZIP=$PKGS/zips/qt5.tar.gz
+NDK_ZIP=$(find $PKGS -name "android-ndk*.zip" -print -quit)
+SDK_ZIP=$(find $PKGS -name "sdk-tool*.zip" -print -quit)
+echo "NDK_ZIP=$NDK_ZIP"
+echo "SDK_ZIP=$SDK_ZIP"
 
+reinstall_ndk_sdk
+build_qt5
