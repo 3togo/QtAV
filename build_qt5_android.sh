@@ -25,6 +25,8 @@ build_qt5() {
     cd $QT5
     export ANDROID_NDK_ROOT=$HOME/android/ndk
     export ANDROID_SDK_ROOT=$HOME/android/sdk
+    export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+    export PATH=$PATH:$JAVA_HOME/bin
     ./configure -xplatform android-clang -nomake tests -nomake examples -android-ndk $HOME/android/ndk -android-sdk $HOME/android/sdk -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$PREFIX
     echo -n "OK to do 'make' ?"
     read answer
