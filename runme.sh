@@ -17,6 +17,10 @@ if [[ `sudo -nv 2>&1` =~ "password" ]]; then
         fi
     done
 fi
+cd $QTAV
+git stash
+git pull
+
 if [ ! -f "$HOME/.local/qt5/armv7/bin/qmake" ]; then
 	INSTALL_QT5="y"
 else
@@ -26,8 +30,14 @@ else
 fi
 [[ "$INSTALL_QT5" == "y" ]] && $QTAV/build_qt5_android.sh
 $QTAV/housekeeping.sh
-find $QTAV -name Makefile -print0|xargs -0 rm
-rm -rf $QTAV/build_android-armv7
+makes=`find $QTAV -name Makefile -print0`
+if [ ! -z "$makes" ];then
+	echo "makefiles=$makes"
+	echo $makes|xargs -0 rm
+fi
+if [ -d $QTAV/build_android-armv7 ];then
+	rm -rf $QTAV/build_android-armv7
+fi
 echo "press enter to start building QMLPlayer"
 read answer
 cd $QTAV
