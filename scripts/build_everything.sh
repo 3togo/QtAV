@@ -10,7 +10,8 @@ if [[ `sudo -nv 2>&1` =~ "password" ]]; then
     for mpkg in $pkgs; do
         if dpkg -s $mpkg >/dev/null 2>&1; then
             echo "uninstall $mpkg because it might casue compilation error!(y/n)"
-            read answer
+            read -t 5 answer
+            answer=${answer:-y}
             if [ "$answer" != "${answer#[Yy]}" ] ;then
                 sudo apt-get uninstall $mpkg
             fi
@@ -19,20 +20,21 @@ if [[ `sudo -nv 2>&1` =~ "password" ]]; then
 fi
 echo "update QtAV"
 cd $QTAV
-git stash
-git clean -f
-git pull
+#git stash
+#git clean -f
+#git pull
 
 
 if [ ! -f "$HOME/.local/qt5/armv7/bin/qmake" ]; then
     INSTALL_QT5="y"
 else
     echo "Do you want to reinstall qt5 for android?"
-    read answer
+    read -t 5 answer
+    answer=${answer:-n}
     [[ "$answer" != "${answer#[Yy]}" ]] && INSTALL_QT5="y"
 fi
-[[ "$INSTALL_QT5" == "y" ]] && $QTAV/build_qt5_android.sh
-$QTAV/housekeeping.sh
+[[ "$INSTALL_QT5" == "y" ]] && $QTAV/scripts/build_qt5_android.sh
+$QTAV/scripts/housekeeping.sh
 makes=`find $QTAV -name Makefile -print0`
 if [ ! -z "$makes" ];then
     echo "makefiles=$makes"
@@ -42,6 +44,7 @@ if [ -d $QTAV/build_android-armv7 ];then
     rm -rf $QTAV/build_android-armv7
 fi
 echo "press enter to start building QMLPlayer"
-read answer
+read -t 5 answer
+answer=${answer:-y}
 cd $QTAV
-$QTAV/build_android-armv7.sh
+$QTAV/scripts/build_android-armv7.sh

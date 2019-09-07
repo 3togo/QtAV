@@ -6,8 +6,10 @@ reinstall_ndk_sdk() {
             exit
         fi
     done
-    unzip $NDK_ZIP -d $PKGS
-    unzip $SDK_ZIP -d $PKGS/android-sdk-tools
+    echo "----------unzip $NDK----------"
+    unzip $NDK_ZIP -o -d $PKGS
+    echo "----------unzip $SDK----------"
+    unzip $SDK_ZIP -o -d $PKGS/android-sdk-tools
 
     QT5=$PKGS/qt5
 }
@@ -29,7 +31,8 @@ build_qt5() {
     export PATH=$PATH:$JAVA_HOME/bin
     ./configure -opensource -confirm-license -xplatform android-clang -nomake tests -nomake examples -android-ndk $HOME/android/ndk -android-sdk $HOME/android/sdk -android-ndk-host linux-x86_64 -skip qttranslations -skip qtserialport -no-warnings-are-errors --prefix=$PREFIX
     echo -n "OK to do 'make' ?"
-    read answer
+    read -t 5 answer
+    answer=${answer:-y}
     if [ "$answer" != "${answer#[Yy]}" ] ; then
         make -j `nproc`
         make install
