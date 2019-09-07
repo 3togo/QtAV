@@ -46,5 +46,7 @@ fi
 echo "press enter to start building QMLPlayer"
 read -t 5 answer
 answer=${answer:-y}
-cd $QTAV
-$QTAV/scripts/build_android-armv7.sh
+if [ "$answer" != "${answer#[Yy]}" ] ;then
+    cd $QTAV
+    $QTAV/scripts/build_android-armv7.sh
+fi

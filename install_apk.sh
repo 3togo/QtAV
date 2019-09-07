@@ -1,1 +1,1 @@
-find . -name *.apk|xargs adb install
+scripts/install_apk.sh
