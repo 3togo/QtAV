@@ -20,9 +20,9 @@ if [[ `sudo -nv 2>&1` =~ "password" ]]; then
 fi
 echo "update QtAV"
 cd $QTAV
-#git stash
-#git clean -f
-#git pull
+git stash
+git clean -f
+git pull
 
 
 if [ ! -f "$HOME/.local/qt5/armv7/bin/qmake" ]; then
