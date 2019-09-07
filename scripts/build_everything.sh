@@ -23,7 +23,7 @@ git stash
 git clean -f
 git pull
 
-exit
+
 if [ ! -f "$HOME/.local/qt5/armv7/bin/qmake" ]; then
     INSTALL_QT5="y"
 else
