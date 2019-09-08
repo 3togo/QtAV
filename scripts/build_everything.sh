@@ -37,11 +37,12 @@ else
 fi
 [[ "$INSTALL_QT5" == "y" ]] && $QTAV/scripts/build_qt5_android.sh
 $QTAV/scripts/housekeeping.sh
-makes=`find $QTAV -name Makefile`
+makes=`find $QTAV -name Makefile -print`
 if [ ! -z "$makes" ];then
     echo "makefiles=$makes"
     echo $makes|xargs -0 rm
 fi
+exit
 if [ -d $QTAV/build_android-armv7 ];then
     rm -rf $QTAV/build_android-armv7
 fi
