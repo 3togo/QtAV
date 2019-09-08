@@ -37,7 +37,7 @@ else
 fi
 [[ "$INSTALL_QT5" == "y" ]] && $QTAV/scripts/build_qt5_android.sh
 $QTAV/scripts/housekeeping.sh
-makes=`find $QTAV -name Makefile -print0`
+makes=`find $QTAV -name Makefile`
 if [ ! -z "$makes" ];then
     echo "makefiles=$makes"
     echo $makes|xargs -0 rm
