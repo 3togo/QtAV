@@ -26,5 +26,3 @@ if [ "$answer" != "${answer#[Yy]}" ] ;then
     cd $QTAV
     $QTAV/scripts/build_android-armv7.sh
 fi
-
-$QTAV/scripts/build_everything_actual.sh
