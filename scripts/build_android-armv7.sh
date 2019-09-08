@@ -1,4 +1,6 @@
 #! /bin/bash
+RED='\033[0;31m'
+NC='\033[0m' # No Color
 BNAME=$0
 BNAME=${BNAME##*/}
 BNAME=${BNAME%%.*}
@@ -10,10 +12,6 @@ FFMPEG=$PWD/ffmpeg-android
 bdir="$HOME/.local"
 BARM=$bdir/qt5/$ARCH_SHORT
 QMAKE=$BARM/bin/qmake
-#[[ ! -d $bdir ]] && sudo mkdir -p $bdir
-#[[ ! -d $bdir/ndk ]] &&  sudo ln -sf $PWD/../ndk $bdir/ndk
-#[[ ! -d $bdir/sdk ]] &&  sudo ln -sf $PWD/../sdk $bdir/sdk
-#[[ ! -d $bdir/qt5 ]] &&  sudo ln -sf $PWD/../qt5 $bdir/qt5
 export ANDROID_NDK_ROOT="$HOME/android/ndk"
 export ANDROID_SDK_ROOT="$HOME/android/sdk"
 echo "QMAKE = $QMAKE"
@@ -25,7 +23,7 @@ echo "-------------------done fixing gradle---------------------"
 
 MAKE=make
 
-BUILDDIR=$PWD/$BNAME
+BUILDDIR=$QTAV/$BNAME
 [[ ! -d $BUILDDIR ]] && mkdir $BUILDDIR
 cd $BUILDDIR
 QPSUBDIR=examples/QMLPlayer
@@ -111,21 +109,28 @@ echo "---------- running androiddeployqt now ------------"
 cd $BUILDDIR2/android-build
 ./gradlew assembleDebug
 
-cd $BUILDDIR
+cd $BUILDDIR2
+apk_name=`find $BUILDDIR2 -name "*\.apk"`
+echo "apk_name=$apk_name"
+if [ -z "$apk_name" ]; then
+	echo "$apk_name cannot be found!"
+	exit 1
+fi
 if [[ $(</etc/hostname) =~ "marvel-001" ]]; then
-	echo "marvel-001"
-	apk_name=`find . -type f -print|grep -i "\.apk"`
-	apk_base=${apk_name##*/}
-	apk_net=${apk_base%%.*}
+	apk_base=${apk_name##*[/_]}
 	now=$(date +"%Y_%m_%d")
-	apk_new=$apk_net"_"$now".apk"
-	#echo $apk_new
-	#find . -type f -print|grep -i "\.apk"|xargs -i cp -f {} ~/Desktop
-	cp -f $apk_name ~/Desktop/$apk_new
-	echo "$apk_new  was copied to Desktop"
-	echo "you could copy and paste to your computer"
+	apk_new="${apk_base%%.*}_${now}.apk"
+	cmd="cp -f $apk_name $HOME/Desktop/$apk_new"
+	echo -e "\n$cmd"
+	$cmd
+	printf '=%.0s' {1..40}
+	echo ""
+	echo -e "${RED}$apk_new{NC} was copied to Desktop."
+	printf "you could ${RED}copy and paste${NC} to your computer!!!\n"
+	printf '=%.0s' {1..40}
+	echo -e "\nDone!"
 else
-	find . -type f -print|grep -i "\.apk"|xargs adb install
+	adb install $apk_name
 fi
 
 
