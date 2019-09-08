@@ -1,7 +1,6 @@
 QTAV=$HOME/android/QtAV
 is_sudoer=`sudo -nv 2>&1`
 is_sudoer=${is_sudoer%%,*}
-echo "xxxx"
 if [[ ! `sudo -nv 2>&1` =~ "Sorry" ]]; then
     echo "I am sudoer"
     pkgs='git build-essential default-jre openjdk-8-jdk-headless android-sdk android-sdk-platform-23 libc6-i386 openjdk-8-jdk libc6-i386'
