@@ -125,7 +125,7 @@ if [[ $(</etc/hostname) =~ "marvel-001" ]]; then
 	$cmd
 	printf '=%.0s' {1..40}
 	echo ""
-	echo -e "${RED}$apk_new{NC} was copied to Desktop."
+	echo -e "${RED}$apk_new${NC} was copied to Desktop."
 	printf "you could ${RED}copy and paste${NC} to your computer!!!\n"
 	printf '=%.0s' {1..40}
 	echo -e "\nDone!"
