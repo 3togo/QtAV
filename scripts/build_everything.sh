@@ -21,7 +21,7 @@ fi
 echo "update QtAV"
 cd $QTAV
 git config user.email nobody@nowhere.com
-git conifg user.name nobody
+git config user.name nobody
 git stash
 git clean -f
 git pull
