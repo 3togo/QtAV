@@ -6,7 +6,7 @@ if [[ ! `sudo -nv 2>&1` =~ "Sorry" ]]; then
     echo "I am sudoer"
     pkgs='git build-essential default-jre openjdk-8-jdk-headless android-sdk android-sdk-platform-23 libc6-i386 openjdk-8-jdk libc6-i386'
     for mpkg in $pkgs; do
-        echo $mpkg
+        #echo $mpkg
         if [ $(dpkg-query -W -f='${Status}' $mpkg 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
             echo "installing $mpkg"
             sudo apt-get install $mpkg
