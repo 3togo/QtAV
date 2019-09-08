@@ -1,1 +1,0 @@
-build_android-armv7.sh
