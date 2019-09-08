@@ -42,7 +42,7 @@ if [ ! -z "$makes" ];then
     echo "makefiles=$makes"
     echo $makes|xargs rm
 fi
-exit
+
 if [ -d $QTAV/build_android-armv7 ];then
     rm -rf $QTAV/build_android-armv7
 fi
