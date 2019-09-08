@@ -20,6 +20,8 @@ if [[ `sudo -nv 2>&1` =~ "password" ]]; then
 fi
 echo "update QtAV"
 cd $QTAV
+git config user.email nobody@nowhere.com
+git conifg user.name nobody
 git stash
 git clean -f
 git pull
