@@ -112,7 +112,20 @@ cd $BUILDDIR2/android-build
 ./gradlew assembleDebug
 
 cd $BUILDDIR
-find . -type f -print|grep -i "\.apk"|xargs adb install
-
+if [[ $(</etc/hostname) =~ "marvel-001" ]]; then
+	echo "marvel-001"
+	apk_name=`find . -type f -print|grep -i "\.apk"`
+	apk_base=${apk_name##*/}
+	apk_net=${apk_base%%.*}
+	now=$(date +"%Y_%m_%d")
+	apk_new=$apk_net"_"$now".apk"
+	#echo $apk_new
+	#find . -type f -print|grep -i "\.apk"|xargs -i cp -f {} ~/Desktop
+	cp -f $apk_name ~/Desktop/$apk_new
+	echo "$apk_new  was copied to Desktop"
+	echo "you could copy and paste to your computer"
+else
+	find . -type f -print|grep -i "\.apk"|xargs adb install
+fi
 
 
