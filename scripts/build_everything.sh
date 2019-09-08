@@ -40,7 +40,7 @@ $QTAV/scripts/housekeeping.sh
 makes=`find $QTAV -name Makefile -print`
 if [ ! -z "$makes" ];then
     echo "makefiles=$makes"
-    echo $makes|xargs -0 rm
+    echo $makes|xargs rm
 fi
 exit
 if [ -d $QTAV/build_android-armv7 ];then
